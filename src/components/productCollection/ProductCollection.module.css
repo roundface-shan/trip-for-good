@@ -1,0 +1,14 @@
+.content {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: white;
+    min-width: 1250px;
+    height: 100%;
+}
+
+.side-image {
+    width: 180px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
