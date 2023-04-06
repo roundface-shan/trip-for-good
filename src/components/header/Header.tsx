@@ -4,12 +4,31 @@ import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
 import logo from "../../assets/logo.svg";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { MenuInfo } from "rc-menu/lib/interface";
+import { addLanguageActionCreator, changeLanguageActionCreator } from "../../redux/language/languageActions";
+import { useDispatch } from "react-redux";
+import { useSelector } from "../../redux/hooks";
+import { useTranslation } from 'react-i18next';
+
 
 export const Header: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
-    return (
+  const language = useSelector((state) => state.language)
+  const languageList = useSelector((state) => state.languageList)
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+  
+  const handleMenuClick = (e: MenuInfo) => {
+    if (e.key === 'new') {
+      dispatch(addLanguageActionCreator('新语言', 'new_lang'))
+    } else {
+      dispatch(changeLanguageActionCreator(e.key))
+    }
+  }
+    
+  return (
         <div className={styles['app-header']}>
         {/* top-header */}
         <div className={styles['top-header']}>
@@ -18,45 +37,52 @@ export const Header: React.FC = () => {
           <Dropdown.Button style={{marginLeft: 15, display: 'inline'}} 
           menu={
             {items: [
-              {key: '1', label: '中文'},
-              {key: '2', label: '英文'},
-            ]}
+              ...languageList.map((l) => {
+                return { key: l.code, label: l.name };
+              }),
+              { key: "new", label: t("header.add_new_language") }
+            ],
+            onClick: handleMenuClick
+            }
           }
           icon={<GlobalOutlined />}
           >
-            语言
+            {language === 'zh' ? '中文' : 'English'}
           </Dropdown.Button>
           <Button.Group className={styles['button-group']}>
-            <Button>注册</Button>
-            <Button>登陆</Button>
+            <Button onClick={() => navigate('/register')}>{t("header.register")}</Button>
+            <Button onClick={() => navigate('/signin')}>{t("header.signin")}</Button>
           </Button.Group>
           </div>
         </div>
         <Layout.Header className={styles['main-header']}>
-          <img src={logo} alt="logo" className={styles['App-logo']}/>
-          <Typography.Title level={3} className={styles.title}>
-            React 旅游网
-          </Typography.Title>
+          <span onClick={() => navigate('/')}>
+            <img src={logo} alt="logo" className={styles['App-logo']}/>
+            <Typography.Title level={3} className={styles.title}>
+              {t("header.title")}
+            </Typography.Title>
+          </span>
           <Input.Search placeholder="请输入旅游目的地、主题、或关键字" className={styles['search-input']}/>
         </Layout.Header>
         <Menu mode={'horizontal'}
           items={[
-            {key: '1', label: '首页'},
-            {key: '2', label: '周末游'},
-            {key: '3', label: '跟团游'},
-            {key: '4', label: '自由行'},
-            {key: '5', label: '私家团'},
-            {key: '6', label: '游学'},
-            {key: '7', label: '定制游'},
-            {key: '8', label: '企业游'},
-            {key: '9', label: '高端游'},
-            {key: '10', label: '爱玩户外'},
-            {key: '11', label: '主题游'},
-            {key: '12', label: '游轮'},
-            {key: '13', label: '签证'},
-            {key: '14', label: '企业游'},
-            {key: '15', label: '保险'},
-          ]}
+            { key: "1", label: t("header.home_page") },
+            { key: "2", label: t("header.weekend") },
+            { key: "3", label: t("header.group") },
+            { key: "4", label: t("header.backpack") },
+            { key: "5", label: t("header.private") },
+            { key: "6", label: t("header.cruise") },
+            { key: "7", label: t("header.hotel") },
+            { key: "8", label: t("header.local") },
+            { key: "9", label: t("header.theme") },
+            { key: "10", label: t("header.custom") },
+            { key: "11", label: t("header.study") },
+            { key: "12", label: t("header.visa") },
+            { key: "13", label: t("header.enterprise") },
+            { key: "14", label: t("header.high_end") },
+            { key: "15", label: t("header.outdoor") },
+            { key: "16", label: t("header.insurance") },
+        ]}
           className={styles['main-menu']}
         >
         </Menu>

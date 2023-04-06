@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 type MetchParams = {
     touristRouteId: string,
-    other: string,
+    other?: string,
 }
 
 export const DetailPage: React.FC = () => {
