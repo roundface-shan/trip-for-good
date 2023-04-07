@@ -17,6 +17,7 @@ const initialState: LanguageState = {
 export default (state = initialState, action: LanguageActionTypes) => {
     switch (action.type) {
         case CHANGE_LANGUAGE:
+          // 黑科技在这里
             i18n.changeLanguage(action.payload);
           return { ...state, language: action.payload };
         case ADD_LANGUAGE:

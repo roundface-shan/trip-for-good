@@ -3,7 +3,7 @@ import styles from "./Header.module.css";
 import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
 import logo from "../../assets/logo.svg";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { MenuInfo } from "rc-menu/lib/interface";
 import { addLanguageActionCreator, changeLanguageActionCreator } from "../../redux/language/languageActions";
 import { useDispatch } from "react-redux";
@@ -13,8 +13,6 @@ import { useTranslation } from 'react-i18next';
 
 export const Header: React.FC = () => {
   const navigate = useNavigate()
-  const location = useLocation()
-  const params = useParams()
   const language = useSelector((state) => state.language)
   const languageList = useSelector((state) => state.languageList)
   const dispatch = useDispatch()
