@@ -7,47 +7,56 @@ import sideImage2 from '../../assets/images/sider_2019_02-04.png';
 import sideImage3 from '../../assets/images/sider_2019_02-04-2.png';
 import { withTranslation, WithTranslation } from "react-i18next";
 import axios from "axios";
+import { connect } from 'react-redux';
+import { RootState } from "../../redux/store";
+import { 
+    fetchStartCreator,
+    fetchSuccessCreator,
+    fetchFailureCreator
+ } from "../../redux/recommendProducts/recommendProductsActions";
 
-interface State {
-    loading: boolean,
-    error: string | null,
-    productList: any[],
+ const mapDispatchToProps = (dispatch) => {
+    return {
+        fetchStart: () => {
+            dispatch(fetchStartCreator());
+        },
+        fetchSuccess: (data) => {
+            dispatch(fetchSuccessCreator(data));
+        },
+        fetchFailure: (error: any) => {
+            dispatch(fetchFailureCreator(error));
+        },
+    }
 }
 
-class HomePageComponent extends React.Component <WithTranslation, State>{
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            error: null,
-            loading: true,
-            productList: [],
-        }
+// 把相关状态从store里取出来
+const mapStateToProps = (state: RootState) => {
+    return {
+        isLoading: state.recommendProducts.isLoading,
+        error: state.recommendProducts.error,
+        productList: state.recommendProducts.productList,
     }
+}
 
+type PropsType = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & WithTranslation;
+class HomePageComponent extends React.Component <PropsType>{
     async componentDidMount(): Promise<void> {
+        this.props.fetchStart()
         try{
             const {data} = await axios
             .get('http://123.56.149.216:8080/api/productCollections')
-            this.setState({
-                error: null,
-                loading: false,
-                productList: data,
-            });
+            this.props.fetchSuccess(data)
         }catch (error) {
             if (error instanceof Error) {
-                this.setState({
-                    error: error.message,
-                    loading: false,
-                });
+                this.props.fetchFailure(error.message)
             }
         }
         
     }
 
     render(): React.ReactNode {
-        const {t} = this.props;
-        const {productList, loading, error} = this.state;
-        if (loading) {
+        const { t, productList, isLoading, error } = this.props;
+        if (isLoading) {
             return (<Spin
                 size='large'
                 style={{
@@ -59,11 +68,12 @@ class HomePageComponent extends React.Component <WithTranslation, State>{
                 }}
             />)
         }
+        // console.log(productList[0].touristRoutes)
         if (error) {
             return <div>{error}</div>
         }
         return (
-            <div>
+            <>
                 <Header />
                 <div className={styles['page-content']}>
                     <Row style={{marginTop: 20}}>
@@ -81,7 +91,7 @@ class HomePageComponent extends React.Component <WithTranslation, State>{
                         </Typography.Title>}
                     sideImage={sideImage}
                     products={productList[0].touristRoutes}
-                    />
+                    /> 
                     <ProductCollection
                     title={
                         <Typography.Title level={3} type='danger'>
@@ -101,9 +111,9 @@ class HomePageComponent extends React.Component <WithTranslation, State>{
                     <BusinessPartners />
                 </div>
                 <Footer />
-            </div>
+            </>
         );
     }
 }
 
-export const HomePage = withTranslation()(HomePageComponent);
+export const HomePage = connect(mapStateToProps, mapDispatchToProps)(withTranslation()(HomePageComponent));

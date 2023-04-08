@@ -13,8 +13,9 @@ import { useTranslation } from 'react-i18next';
 
 export const Header: React.FC = () => {
   const navigate = useNavigate()
-  const language = useSelector((state) => state.language)
-  const languageList = useSelector((state) => state.languageList)
+  const language = useSelector((state) => state.language.language)
+  // 如果用useState从store里获得状态的话，需要用useEffect来监听store的变化, 写法上太麻烦
+  const languageList = useSelector((state) => state.language.languageList)
   const dispatch = useDispatch()
   const { t } = useTranslation()
   
