@@ -1,3 +1,7 @@
+import { ThunkAction } from "redux-thunk";
+import { RootState } from "../store";
+import axios from 'axios';
+
 // 这种工厂模式的好处就是减少拼写错误
 
 // 开始调用推荐信息的异步api
@@ -37,4 +41,18 @@ export const fetchFailureCreator = (error): IFetchFailureAction => {
         type: FETCH_RECOMMEND_PRODUCTS_FAILURE,
         payload: error
     }
+}
+
+export const showMeYourDataCreator = (): ThunkAction<void, RootState, unknown, RecommendProductsActions> =>
+    async (dispatch) => {
+    dispatch(fetchStartCreator())
+        try{
+            const {data} = await axios
+            .get('http://123.56.149.216:8080/api/productCollections')
+            dispatch(fetchSuccessCreator(data))
+        }catch (error) {
+            if (error instanceof Error) {
+                dispatch(fetchFailureCreator(error.message))
+            }
+        }
 }

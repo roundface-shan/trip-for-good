@@ -10,22 +10,14 @@ import axios from "axios";
 import { connect } from 'react-redux';
 import { RootState } from "../../redux/store";
 import { 
-    fetchStartCreator,
-    fetchSuccessCreator,
-    fetchFailureCreator
+    showMeYourDataCreator
  } from "../../redux/recommendProducts/recommendProductsActions";
 
  const mapDispatchToProps = (dispatch) => {
     return {
-        fetchStart: () => {
-            dispatch(fetchStartCreator());
-        },
-        fetchSuccess: (data) => {
-            dispatch(fetchSuccessCreator(data));
-        },
-        fetchFailure: (error: any) => {
-            dispatch(fetchFailureCreator(error));
-        },
+        showMeYourData: () => {
+            dispatch(showMeYourDataCreator())
+        }
     }
 }
 
@@ -40,18 +32,8 @@ const mapStateToProps = (state: RootState) => {
 
 type PropsType = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & WithTranslation;
 class HomePageComponent extends React.Component <PropsType>{
-    async componentDidMount(): Promise<void> {
-        this.props.fetchStart()
-        try{
-            const {data} = await axios
-            .get('http://123.56.149.216:8080/api/productCollections')
-            this.props.fetchSuccess(data)
-        }catch (error) {
-            if (error instanceof Error) {
-                this.props.fetchFailure(error.message)
-            }
-        }
-        
+    componentDidMount(): void{
+        this.props.showMeYourData()
     }
 
     render(): React.ReactNode {
