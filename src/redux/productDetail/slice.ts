@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 interface ProductDetailState{
     product: any,
@@ -13,24 +13,32 @@ const initialState: ProductDetailState = {
     error: null
 }
 
+export const getProductDetail = createAsyncThunk(
+    'productDetail/getProductDetail',
+    async (productId: string, thunkAPI) => {
+        const { data } = await axios.get(
+            `http://123.56.149.216:8080/api/touristRoutes/${productId}`)
+        return data
+    } 
+)
+
 export const productDetailSlice = createSlice({
     name: 'productDetail',
     initialState,
-    reducers: {
-        fetchProductDetailStart: (state) => {
+    reducers: {},
+    extraReducers: {
+        [getProductDetail.pending.type]: (state) => {
             // 原先得这么写：return {...state, isLoading: true, error: null}
             state.isLoading = true;
             state.error = null;
         },
-        fetchProductDetailSuccess: (state, action: PayloadAction<any>) => {
+        [getProductDetail.fulfilled.type]: (state, action: PayloadAction<any>) => {
             state.isLoading = false;
             state.product = action.payload;
         },
-        fetchProductDetailFailure: (state, action: PayloadAction<string>) => {
+        [getProductDetail.rejected.type]: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         }
     }
 })
-
-export const { fetchProductDetailStart, fetchProductDetailSuccess, fetchProductDetailFailure } = productDetailSlice.actions;
