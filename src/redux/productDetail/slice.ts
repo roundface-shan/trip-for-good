@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ProductDetailState{
     product: any,
     isLoading: boolean,
-    error: string | null
+    error: string | null | undefined
 }
 
 const initialState: ProductDetailState = {
