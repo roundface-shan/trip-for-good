@@ -1,4 +1,4 @@
-import styles from './SearchPage.module.scss';
+import styles from './SearchPage.module.css';
 import React from 'react';
 import { Header, Footer, FilterArea, ProductList } from '../../components';
 
