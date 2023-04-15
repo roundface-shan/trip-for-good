@@ -6,6 +6,7 @@ import styles from './DetailPage.module.css'
 import {Header, Footer, ProductIntro} from '../../components'
 import { productDetailSlice, getProductDetail } from "../../redux/productDetail/slice";
 import { useSelector, useAppDispatch } from "../../redux/hooks";
+import { MainLayout } from "../../layouts/mainLayout";
 
 const { RangePicker } = DatePicker;
 
@@ -43,10 +44,8 @@ export const DetailPage: React.FC = () => {
           return <div>{error}</div>
       }
   return (
-    <>
+    <MainLayout>
     {/* {console.log(product)} */}
-      <Header />
-        <div className={styles['page-content']}>
           <div className={styles['product-intro-container']}>
             <Row>
               <Col span={13}>
@@ -100,9 +99,7 @@ export const DetailPage: React.FC = () => {
             <div dangerouslySetInnerHTML={{__html: product.notes}}
             style={{margin: 50}}></div>
           </div>
-        </div>
-      <Footer />
-    </>
+    </MainLayout>
     
   );
 };
