@@ -11,7 +11,10 @@ const App: React.FC = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<SigninPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/search/:keywords" element={<SearchPage />} />
+          <Route path="/search/" >
+            <Route path=":keywards" element={<SearchPage />} />
+            <Route path="" element={<SearchPage />} />
+          </Route>
           <Route path="/detail/:touristRouteId" element={<DetailPage />} />
           <Route path="*" element={<h1>404 页面找不到了</h1>} />
         </Routes>
