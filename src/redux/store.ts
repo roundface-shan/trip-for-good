@@ -6,12 +6,14 @@ import thunk from 'redux-thunk';
 import { actionLog } from './middleware/actionLog';
 import { productDetailSlice } from './productDetail/slice';
 import { productSearchSlice } from './ProductSearch/slice';
+import { SignInSlice } from './SignIn/slice';
 
 const rootReducer = combineReducers({
     language: languageReducer,
     recommendProducts: recommendProductsReducer,
     productDetail: productDetailSlice.reducer,
-    productSearch: productSearchSlice.reducer
+    productSearch: productSearchSlice.reducer,
+    signIn: SignInSlice.reducer
 })
 // 体验一个中间件
 // const store = createStore(rootReducer, applyMiddleware(thunk, actionLog))
