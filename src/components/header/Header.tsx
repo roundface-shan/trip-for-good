@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styles from "./Header.module.css";
 import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
@@ -9,7 +9,13 @@ import { addLanguageActionCreator, changeLanguageActionCreator } from "../../red
 import { useDispatch } from "react-redux";
 import { useSelector } from "../../redux/hooks";
 import { useTranslation } from 'react-i18next';
+import jwt_decode, { JwtPayload as DefaultJwtPayload } from "jwt-decode";
+import { SignInSlice } from "../../redux/SignIn/slice";
 
+
+interface JwtPayload extends DefaultJwtPayload {
+  username: string
+}
 
 export const Header: React.FC = () => {
   const navigate = useNavigate()
@@ -18,6 +24,16 @@ export const Header: React.FC = () => {
   const languageList = useSelector((state) => state.language.languageList)
   const dispatch = useDispatch()
   const { t } = useTranslation()
+
+  const jwt = useSelector((state) => state.signIn.token)
+  const [username, setUsername] = useState<string | null>(null)
+
+  useEffect(() => {
+    if(jwt !== null) {
+      const token = jwt_decode<JwtPayload>(jwt)
+      setUsername(token.username)
+    }
+  }, [jwt])
   
   const handleMenuClick = (e: MenuInfo) => {
     if (e.key === 'new') {
@@ -26,7 +42,12 @@ export const Header: React.FC = () => {
       dispatch(changeLanguageActionCreator(e.key))
     }
   }
-    
+  
+  const onSignOut = () => {
+    dispatch(SignInSlice.actions.signOut())
+    navigate('/')
+  }
+
   return (
         <div className={styles['app-header']}>
         {/* top-header */}
@@ -48,10 +69,21 @@ export const Header: React.FC = () => {
           >
             {language === 'zh' ? '中文' : 'English'}
           </Dropdown.Button>
-          <Button.Group className={styles['button-group']}>
-            <Button onClick={() => navigate('/register')}>{t("header.register")}</Button>
-            <Button onClick={() => navigate('/signin')}>{t("header.signin")}</Button>
-          </Button.Group>
+          {jwt ? (
+            <Button.Group className={styles['button-group']}>
+              <span>{t('header.welcome')}
+                <Typography.Text strong>{username}</Typography.Text>
+              </span>
+              <Button>{t('header.shoppingCart')}</Button>
+              <Button onClick={onSignOut}>{t("header.signOut")}</Button>
+            </Button.Group>
+            ) : (
+                <Button.Group className={styles['button-group']}>
+                  <Button onClick={() => navigate('/register')}>{t("header.register")}</Button>
+                  <Button onClick={() => navigate('/signin')}>{t("header.signin")}</Button>
+                </Button.Group>
+                )
+          }
           </div>
         </div>
         <Layout.Header className={styles['main-header']}>
