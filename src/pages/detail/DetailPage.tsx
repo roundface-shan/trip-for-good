@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Spin, Row, Col, DatePicker, Space, Divider, Typography, Anchor, Menu } from "antd";
+import { Spin, Row, Col, DatePicker, Space, Divider, Typography, Anchor, Menu, Button } from "antd";
 import styles from './DetailPage.module.css'
 import {Header, Footer, ProductIntro} from '../../components'
 import { productDetailSlice, getProductDetail } from "../../redux/productDetail/slice";
 import { useSelector, useAppDispatch } from "../../redux/hooks";
 import { MainLayout } from "../../layouts/mainLayout";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { addShoppingCartItem } from "../../redux/shoppingCart/slice";
 
 const { RangePicker } = DatePicker;
 
@@ -21,7 +23,12 @@ export const DetailPage: React.FC = () => {
     // const [product, setProduct] = useState<any>(null);
 
     const dispatch = useAppDispatch()
-    const {isLoading, error, product} = useSelector(state => state.productDetail)
+    const isLoading = useSelector((state) => state.productDetail.isLoading);
+    const error = useSelector((state) => state.productDetail.error);
+    const product = useSelector((state) => state.productDetail.product);
+
+    const jwt = useSelector((state) => state.signIn.token) as string
+    const shoppingCartLoading = useSelector((state) => state.shoppingCart.loading)
 
     useEffect(() => {
           if (touristRouteId){
@@ -43,6 +50,15 @@ export const DetailPage: React.FC = () => {
       if (error) {
           return <div>{error}</div>
       }
+
+  const handleClickAddShoppingCart = () => {
+    if (jwt === null) {
+      alert('请先登录')
+      return
+    }
+    dispatch(addShoppingCartItem({jwt, touristRouteId: product.id}))
+  }
+
   return (
     <MainLayout>
     {/* {console.log(product)} */}
@@ -61,7 +77,21 @@ export const DetailPage: React.FC = () => {
                 />
               </Col>
               <Col span={11}>
-                <RangePicker open style={{marginTop: 20}}/>
+                <Button
+                  style={{marginTop: 50, marginBottom: 30, display: 'block'}}
+                  type='primary'
+                  danger
+                  loading={shoppingCartLoading}
+                  onClick={() => {
+                    dispatch(
+                      addShoppingCartItem({ jwt, touristRouteId: product.id })
+                    );
+                  }}
+                >
+                  <ShoppingCartOutlined />
+                  加入购物车
+                </Button>
+                <RangePicker style={{marginTop: 20}}/>
               </Col>
             </Row>
           </div>

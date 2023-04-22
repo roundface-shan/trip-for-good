@@ -111,8 +111,8 @@ export const ProductIntro: React.FC<PropsType> = (props) => {
                 </Typography.Text>
             </div>
             <Carousel autoplay slidesToShow={3}>
-                {pictures.map((p) => (
-                    <Image height={150} src={p}/>
+                {pictures.map((p, index) => (
+                    <Image height={150} src={p} key={index}/>
                 ))}
             </Carousel>
             <Table<RowType> dataSource={tableDataSources} columns={columns}

@@ -63,6 +63,7 @@
     line-height: 64px;
     margin-top: 17px;
     margin-left: 37px;
+    position: absolute;
   }
   
   .main-menu {
