@@ -71,7 +71,7 @@ export const Header: React.FC = () => {
           </Dropdown.Button>
           {jwt ? (
             <Button.Group className={styles['button-group']}>
-              <span>{t('header.welcome')}
+              <span style={{marginRight: 15}}>{t('header.welcome')}
                 <Typography.Text strong>{username}</Typography.Text>
               </span>
               <Button onClick={() => navigate('/shoppingCart')}>{t('header.shoppingCart')}</Button>
