@@ -10,6 +10,7 @@ import { SignInSlice } from './SignIn/slice';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { shoppingCartSlice } from './shoppingCart/slice';
+import { orderSlice } from './order/slice';
 
 const persistConfig = {
     key : 'root',
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     productSearch: productSearchSlice.reducer,
     signIn: SignInSlice.reducer,
     shoppingCart: shoppingCartSlice.reducer,
+    order: orderSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
